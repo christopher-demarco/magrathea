@@ -1,0 +1,53 @@
+---
+- name: Setup
+  hosts: all
+  become: yes
+  vars:
+    - username: "{{ansible_hostname.split('-')[0]}}"
+  tasks:
+    - apt:
+        name: "{{item}}"
+        state: latest
+        update_cache: yes
+      with_items:
+        - emacs24-nox
+        - docker-compose
+        - docker.io
+        - jq
+        - vim
+      tags:
+        - slow
+    - lineinfile:
+        dest: "/etc/ssh/sshd_config"
+        regexp: "(PasswordAuthentication) no"
+        line: "\\1 yes"
+        state: present
+        backrefs: yes
+      notify: Restart ssh
+      tags:
+        - ssh
+    - group:
+        name: "{{username}}"
+        state: present
+    - user:
+        append: yes
+        groups: docker
+        name: "{{ansible_user}}"
+    - user:
+        append: yes
+        generate_ssh_key: yes
+        groups: docker, sudo
+        name: "{{username}}"
+        password: "{{ansible_hostname.split('-')[1] | password_hash('sha512')}}"
+        shell: /bin/bash
+  handlers:
+    - name: Restart ssh
+      service:
+        name: ssh
+        state: restarted
+        
+
+
+# playbook_workstation.yml
+# Copyright (c) 2017 Christopher DeMarco
+# Licensed under Apache License v2.0
