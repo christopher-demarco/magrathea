@@ -2,9 +2,9 @@
 - name: Setup
   hosts: all
   become: yes
-  vars:
-    - username: "{{ansible_hostname.split('-')[0]}}"
   tasks:
+    - set_fact:
+        username: "{{ansible_hostname.split('-')[0]}}"
     - apt:
         name: "{{item}}"
         state: latest
@@ -14,9 +14,19 @@
         - docker-compose
         - docker.io
         - jq
+        - python-pip
+        - tree
+        - unzip
         - vim
+        - virtualenv
       tags:
         - slow
+    - unarchive:
+        src: https://releases.hashicorp.com/terraform/0.10.6/terraform_0.10.6_linux_amd64.zip
+        remote_src: yes
+        dest: /usr/local/bin
+      tags:
+        - terraform
     - lineinfile:
         dest: "/etc/ssh/sshd_config"
         regexp: "(PasswordAuthentication) no"
@@ -47,6 +57,21 @@
         state: restarted
         
 
+- name: Install lab stuff
+  hosts: all
+  become: yes
+  become_user: "{{username}}"
+  tasks:
+    - git:
+        repo: https://github.com/christopher-demarco/magrathea.git
+        dest: /home/{{username}}/magrathea
+    - git:
+        repo: https://github.com/ansible/ansible.git
+        dest: /home/{{username}}/ansible
+    - pip:
+        requirements: /home/{{username}}/ansible/requirements.txt
+        virtualenv: /home/{{username}}/.venv
+        state: latest
 
 # playbook_workstation.yml
 # Copyright (c) 2017 Christopher DeMarco
