@@ -13,8 +13,8 @@
         - docker-compose
         - docker.io
         - emacs24-nox
-        - jq
         - htop
+        - jq
         - python-pip
         - tig
         - tmux
