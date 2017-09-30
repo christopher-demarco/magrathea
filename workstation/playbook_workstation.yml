@@ -18,6 +18,7 @@
         - python-pip
         - tig
         - tree
+        - tmux
         - unzip
         - vim
         - virtualenv
