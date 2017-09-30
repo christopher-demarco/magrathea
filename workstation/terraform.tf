@@ -2,7 +2,7 @@ variable "names" { default = ["alpha"] }
 variable "region" { default = "us-east4" }
 
 provider "google" {
-  credentials = "${file("magrathea.json")}"
+  credentials = "${file("keys/magrathea.json")}"
   project = "magrathea-178523"
   region = "${var.region}"
 }
@@ -15,7 +15,7 @@ resource "google_compute_instance" "workstation" {
   zone = "${var.region}-a"
   boot_disk { initialize_params { image = "ubuntu-1704" } }
   network_interface { network = "default" access_config { } }
-  metadata { sshKeys = "cmd:${file("cmd_magrathea.pub")}" }
+  metadata { sshKeys = "cmd:${file("keys/cmd_magrathea.pub")}" }
 }
 
 # resource "google_compute_firewall" "workstation" {

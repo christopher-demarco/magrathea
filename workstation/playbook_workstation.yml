@@ -26,7 +26,7 @@
         remote_src: yes
         dest: /usr/local/bin
       tags:
-        - terraform
+        - slow
     - lineinfile:
         dest: "/etc/ssh/sshd_config"
         regexp: "(PasswordAuthentication) no"
@@ -70,8 +70,21 @@
         dest: /home/{{username}}/ansible
     - pip:
         requirements: /home/{{username}}/ansible/requirements.txt
-        virtualenv: /home/{{username}}/.venv
+        virtualenv: /home/{{username}}/.ansible_virtualenv
         state: latest
+      tags:
+        - slow
+    - lineinfile:
+        path: /home/{{username}}/.profile
+        line: . .ansible_virtualenv/bin/activate
+        state: present
+    - lineinfile:
+        path: /home/{{username}}/.profile
+        line: . ansible/hacking/env-setup
+        state: present        
+        
+         
+
 
 # playbook_workstation.yml
 # Copyright (c) 2017 Christopher DeMarco
