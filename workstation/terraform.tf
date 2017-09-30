@@ -10,7 +10,8 @@ provider "google" {
 resource "google_compute_instance" "workstation" {
   count = "${length(var.names)}"
   name = "${var.names[count.index]}"
-  machine_type = "f1-micro"
+  #machine_type = "f1-micro"
+  machine_type = "n1-standard-1"
   #machine_type = "n1-highcpu-2"
   zone = "${var.region}-a"
   boot_disk { initialize_params { image = "ubuntu-1704" } }

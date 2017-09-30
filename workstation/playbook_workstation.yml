@@ -10,11 +10,13 @@
         state: latest
         update_cache: yes
       with_items:
-        - emacs24-nox
         - docker-compose
         - docker.io
+        - emacs24-nox
         - jq
+        - htop
         - python-pip
+        - tig
         - tree
         - unzip
         - vim
