@@ -17,8 +17,8 @@
         - htop
         - python-pip
         - tig
-        - tree
         - tmux
+        - tree
         - unzip
         - vim
         - virtualenv
