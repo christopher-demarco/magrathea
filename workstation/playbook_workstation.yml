@@ -5,13 +5,19 @@
   tasks:
     - set_fact:
         username: "{{ansible_hostname.split('-')[0]}}"
+    - apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu zesty stable"
+        state: present
+        update_cache: yes
     - apt:
         name: "{{item}}"
         state: latest
         update_cache: yes
       with_items:
-        - docker-compose
-        - docker.io
+        - docker-ce
         - emacs24-nox
         - htop
         - jq
@@ -24,6 +30,12 @@
         - virtualenv
       tags:
         - slow
+    - get_url:
+        url: https://github.com/docker/compose/releases/download/1.16.1/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        owner: root
+        group: root
+        mode: 0755
     - unarchive:
         src: https://releases.hashicorp.com/terraform/0.10.6/terraform_0.10.6_linux_amd64.zip
         remote_src: yes
@@ -43,14 +55,14 @@
         name: "{{username}}"
         state: present
     - user:
+        name: "{{ansible_user}}"
         append: yes
         groups: docker
-        name: "{{ansible_user}}"
     - user:
+        name: "{{username}}"
         append: yes
         generate_ssh_key: yes
         groups: docker, sudo
-        name: "{{username}}"
         password: "{{ansible_hostname.split('-')[1] | password_hash('sha512')}}"
         shell: /bin/bash
   handlers:
