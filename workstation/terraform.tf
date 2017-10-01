@@ -1,3 +1,5 @@
+variable "admin" { default = "magrathea" }
+variable "admin_key" { default = "keys/magrathea.pub" }
 variable "names" { default = ["alpha"] }
 variable "region" { default = "us-east4" }
 
@@ -16,14 +18,8 @@ resource "google_compute_instance" "workstation" {
   zone = "${var.region}-a"
   boot_disk { initialize_params { image = "ubuntu-1704" } }
   network_interface { network = "default" access_config { } }
-  metadata { sshKeys = "cmd:${file("keys/cmd_magrathea.pub")}" }
+  metadata { sshKeys = "${var.admin}:${file("${var.admin_key}")}" }
 }
-
-# resource "google_compute_firewall" "workstation" {
-#   name = "workstation"
-#   network = "default"
-#   deny { protocol = "tcp" ports = ["22"] }
-# }
 
 data "google_dns_managed_zone" "workstation" {
   name = "foamninja"

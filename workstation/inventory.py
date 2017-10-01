@@ -11,8 +11,8 @@ inventory['workstations']['hosts'] = state.get('modules')[0].get(
             'outputs').get('workstations').get('value')
 
 inventory['workstations']['vars'] = {
-    "ansible_user": "cmd",
-    "ansible_ssh_private_key_file": "keys/cmd_magrathea"
+    "ansible_user": "magrathea",
+    "ansible_ssh_private_key_file": "keys/magrathea"
     }
 
 print(json.dumps(inventory))
