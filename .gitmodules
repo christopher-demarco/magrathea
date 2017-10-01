@@ -1,6 +1,3 @@
 [submodule "ansible"]
 	path = workstation/ansible
 	url = https://github.com/ansible/ansible.git
-[submodule "workstation/roles/mongrelion.docker"]
-	path = workstation/roles/mongrelion.docker
-	url = https://github.com/mongrelion/ansible-role-docker.git
