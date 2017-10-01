@@ -1,6 +1,7 @@
 variable "admin" { default = "magrathea" }
 variable "admin_key" { default = "keys/magrathea.pub" }
 variable "names" { default = ["alpha"] }
+variable "subdomain" { default = "" }
 variable "region" { default = "us-east4" }
 
 provider "google" {
@@ -27,7 +28,7 @@ data "google_dns_managed_zone" "workstation" {
 
 resource "google_dns_record_set" "workstation" {
   count = "${length(var.names)}"
-  name = "${element(google_compute_instance.workstation.*.name, count.index)}.workstation.${data.google_dns_managed_zone.workstation.dns_name}"
+  name = "${element(google_compute_instance.workstation.*.name, count.index)}.${var.subdomain}${data.google_dns_managed_zone.workstation.dns_name}"
   type = "A"
   ttl = 60
   managed_zone = "${data.google_dns_managed_zone.workstation.name}"
@@ -38,6 +39,6 @@ output "workstations" { value = "${google_compute_instance.workstation.*.network
 
 output "hostnames" { value = "${google_compute_instance.workstation.*.name}" }
 
-
+# magrathea:workstation/terraform.tf
 # Copyright (c) 2017 Christopher DeMarco
 # Licensed under Apache License v2.0

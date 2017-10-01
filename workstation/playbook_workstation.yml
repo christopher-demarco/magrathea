@@ -80,6 +80,11 @@
     - git:
         repo: https://github.com/christopher-demarco/magrathea.git
         dest: /home/{{username}}/magrathea
+    - lineinfile:
+        path: /home/{{username}}/magrathea/workstation/terraform.tfvars
+        line: "subdomain = \"{{ansible_hostname}}\""
+        create: yes
+        state: present
     - git:
         repo: https://github.com/ansible/ansible.git
         dest: /home/{{username}}/ansible
@@ -96,11 +101,9 @@
     - lineinfile:
         path: /home/{{username}}/.profile
         line: . ansible/hacking/env-setup
-        state: present        
+        state: present
+
         
-         
-
-
-# playbook_workstation.yml
+# magrathea:/workstation/playbook_workstation.yml
 # Copyright (c) 2017 Christopher DeMarco
 # Licensed under Apache License v2.0
