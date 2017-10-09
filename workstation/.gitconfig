@@ -1,0 +1,9 @@
+[color]
+  status = auto
+  branch = auto
+[alias]
+  st = status
+  ci = commit
+  co = checkout
+[push]
+  default = simple

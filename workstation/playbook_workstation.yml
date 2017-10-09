@@ -5,6 +5,13 @@
   tasks:
     - set_fact:
         username: "{{ansible_hostname.split('-')[0]}}"
+      tags:
+        - fast
+    - timezone:
+        name: "US/Pacific"
+        hwclock: "UTC"
+      notify:
+        - Restart cron
     - apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
@@ -70,6 +77,10 @@
       service:
         name: ssh
         state: restarted
+    - name: Restart cron
+      service:
+        name: cron
+        state: restarted
         
 
 - name: Install lab stuff
@@ -77,12 +88,18 @@
   become: yes
   become_user: "{{username}}"
   tasks:
+    - copy:
+        src: ".gitconfig"
+        dest: "/home/{{username}}/.gitconfig"
+    - git:
+        repo: https://github.com/christopher-demarco/ansible-class.git
+        dest: /home/{{username}}/class
     - git:
         repo: https://github.com/christopher-demarco/magrathea.git
         dest: /home/{{username}}/magrathea
     - lineinfile:
         path: /home/{{username}}/magrathea/workstation/terraform.tfvars
-        line: "subdomain = \"{{ansible_hostname}}\""
+        line: "subdomain = \"{{ansible_hostname}}.\""
         create: yes
         state: present
     - git:
@@ -96,12 +113,12 @@
         - slow
     - lineinfile:
         path: /home/{{username}}/.profile
-        line: . .ansible_virtualenv/bin/activate
+        line: "{{item}}"
         state: present
-    - lineinfile:
-        path: /home/{{username}}/.profile
-        line: . ansible/hacking/env-setup
-        state: present
+      with_items:
+        - alias tf=terraform
+        - . .ansible_virtualenv/bin/activate
+        - . ansible/hacking/env-setup
 
         
 # magrathea:/workstation/playbook_workstation.yml
