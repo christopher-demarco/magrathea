@@ -1,2 +1,3 @@
 # magrathea
-Building lab infrastructure
+
+TODO: Write a damn readme.
