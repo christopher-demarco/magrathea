@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Magrathea
 
 Generate lab infrastructure for an Ansible class.
@@ -46,6 +47,4 @@ Magrathea project itself, suitable for creating a second instance
 
 1. SSH into the workstation
 2. `cd` to `magrathea/workstation` and run `terraform init ; terraform up`.
-
-
 
