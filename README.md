@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Magrathea
 
 Generate lab infrastructure for an Ansible class.
