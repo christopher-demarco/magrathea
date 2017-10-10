@@ -72,6 +72,11 @@
         groups: docker, sudo
         password: "{{ansible_hostname.split('-')[1] | password_hash('sha512')}}"
         shell: /bin/bash
+    - copy:
+        src: "{{item}}"
+        dest: "/home/{{username}}/"
+      with_items:
+        - .gitconfig
   handlers:
     - name: Restart ssh
       service:
@@ -83,28 +88,25 @@
         state: restarted
         
 
-- name: Install lab stuff
+- name: Install course materials
   hosts: all
   become: yes
   become_user: "{{username}}"
   tasks:
-    - copy:
-        src: ".gitconfig"
-        dest: "/home/{{username}}/.gitconfig"
     - git:
         repo: https://github.com/christopher-demarco/ansible-class.git
         dest: /home/{{username}}/class
     - git:
         repo: https://github.com/christopher-demarco/magrathea.git
         dest: /home/{{username}}/magrathea
+    - git:
+        repo: https://github.com/ansible/ansible.git
+        dest: /home/{{username}}/ansible
     - lineinfile:
         path: /home/{{username}}/magrathea/workstation/terraform.tfvars
         line: "subdomain = \"{{ansible_hostname}}.\""
         create: yes
         state: present
-    - git:
-        repo: https://github.com/ansible/ansible.git
-        dest: /home/{{username}}/ansible
     - pip:
         requirements: /home/{{username}}/ansible/requirements.txt
         virtualenv: /home/{{username}}/.ansible_virtualenv
