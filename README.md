@@ -12,9 +12,9 @@ create/destroy a second instance which she can provision via Ansible.
 
 ## Prerequisites
 
-[Terraform](http://terraform.io)
-[Ansible](http://ansible.com)
-[Python 3](docs.python-guide.org)
+- [Terraform](http://terraform.io)
+- [Ansible](http://ansible.com)
+- [Python 3](docs.python-guide.org)
 
 You will also need a Google Cloud account, properly set up with a
 project and service account credentials, and a DNS domain set up in
