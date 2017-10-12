@@ -48,6 +48,7 @@
         src: https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
         remote_src: yes
         dest: /usr/local/bin
+        creates: /usr/local/bin/terraform
       tags:
         - slow
     - lineinfile:
@@ -73,6 +74,12 @@
         groups: docker, sudo
         password: "{{ansible_hostname.split('-')[1] | password_hash('sha512')}}"
         shell: /bin/bash
+        update_password: on_create
+      register:
+        user_created
+    - command: chage -d0 "{{username}}"
+      when:
+        user_created.changed
     - copy:
         src: "{{item}}"
         dest: "/home/{{username}}/"
@@ -120,6 +127,10 @@
         state: latest
       tags:
         - slow
+    - file:
+        src: /home/{{username}}/magrathea/workstation/inventory.py
+        dest: /home/{{username}}/class/inventory.py
+        state: link
     - lineinfile:
         path: /home/{{username}}/.profile
         line: "{{item}}"
@@ -129,6 +140,7 @@
         - alias em=emacs
         - . .ansible_virtualenv/bin/activate
         - . ansible/hacking/env-setup
+        - export MAGRATHEA_STATE=/home/{{username}}/magrathea/workstation
 
         
 # magrathea:/workstation/playbook_workstation.yml
