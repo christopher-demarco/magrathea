@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
 import json
+import os
+
+tfstate_dir = os.environ.get('MAGRATHEA_STATE', '.')
+tfstate = '{}/terraform.tfstate'.format(tfstate_dir)
 
 inventory = {"workstations": {}}
 
-with open('terraform.tfstate', 'r') as fh:
+with open(tfstate, 'r') as fh:
     state = json.loads(fh.read())
 
 inventory['workstations']['hosts'] = state.get('modules')[0].get(

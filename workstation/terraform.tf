@@ -5,6 +5,7 @@ variable "subdomain" { default = "" }
 variable "region" { default = "us-east4" }
 
 provider "google" {
+  version = "0.1.3"
   credentials = "${file("keys/magrathea.json")}"
   project = "magrathea-178523"
   region = "${var.region}"
