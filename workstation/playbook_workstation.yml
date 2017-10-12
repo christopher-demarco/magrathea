@@ -24,6 +24,7 @@
         state: latest
         update_cache: yes
       with_items:
+        - colordiff
         - docker-ce
         - emacs24-nox
         - htop
@@ -96,12 +97,18 @@
     - git:
         repo: https://github.com/christopher-demarco/ansible-class.git
         dest: /home/{{username}}/class
+      tags:
+        - git
     - git:
         repo: https://github.com/christopher-demarco/magrathea.git
         dest: /home/{{username}}/magrathea
+      tags:
+        - git        
     - git:
         repo: https://github.com/ansible/ansible.git
         dest: /home/{{username}}/ansible
+      tags:
+        - git        
     - lineinfile:
         path: /home/{{username}}/magrathea/workstation/terraform.tfvars
         line: "subdomain = \"{{ansible_hostname}}.\""
@@ -119,6 +126,7 @@
         state: present
       with_items:
         - alias tf=terraform
+        - alias em=emacs
         - . .ansible_virtualenv/bin/activate
         - . ansible/hacking/env-setup
 
