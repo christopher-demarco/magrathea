@@ -1,9 +1,22 @@
 #!/bin/bash
 set -e
 
+while [[ $# -gt 0 ]]; do
+    case $1 in
+	-v|--verbose)
+	    VERBOSE=1
+	    shift
+	    ;;
+    esac
+done
+
 cd ~/.magrathea/workstation
-tf init >> magrathea.log 2>&1
-
-tf destroy -force >> magrathea.log 2>&1
-tf apply >> magrathea.log 2>&1
-
+if [ $VERBOSE ]; then
+    terraform init
+    terraform destroy -force
+    terraform apply
+else
+    terraform init >> magrathea.log 2>&1
+    terraform destroy -force >> magrathea.log 2>&1
+    terraform apply >> magrathea.log 2>&1
+fi

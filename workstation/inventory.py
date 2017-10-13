@@ -4,6 +4,9 @@ import json
 import os
 
 tfstate_dir = os.environ.get('MAGRATHEA_STATE', '.')
+ansible_user = os.environ.get('ANSIBLE_USER', 'magrathea')
+ansible_ssh_private_key_file = os.environ.get(
+    'ANSIBLE_SSH_PRIVATE_KEY_FILE', 'keys/magrathea')
 tfstate = '{}/terraform.tfstate'.format(tfstate_dir)
 
 inventory = {"workstations": {}}
@@ -15,8 +18,8 @@ inventory['workstations']['hosts'] = state.get('modules')[0].get(
             'outputs').get('workstations').get('value')
 
 inventory['workstations']['vars'] = {
-    "ansible_user": "magrathea",
-    "ansible_ssh_private_key_file": "keys/magrathea"
+    "ansible_user": ansible_user,
+    "ansible_ssh_private_key_file": ansible_ssh_private_key_file,
     }
 
 print(json.dumps(inventory))

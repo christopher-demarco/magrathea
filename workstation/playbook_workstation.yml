@@ -108,7 +108,7 @@
         - git
     - git:
         repo: https://github.com/christopher-demarco/magrathea.git
-        dest: /home/{{username}}/magrathea
+        dest: /home/{{username}}/.magrathea
       tags:
         - git        
     - git:
@@ -117,10 +117,13 @@
       tags:
         - git        
     - lineinfile:
-        path: /home/{{username}}/magrathea/workstation/terraform.tfvars
-        line: "subdomain = \"{{ansible_hostname}}.\""
+        path: /home/{{username}}/.magrathea/workstation/terraform.tfvars
+        line: "{{item}}"
         create: yes
         state: present
+      with_items:
+        - "subdomain = \"{{ansible_hostname}}.\""
+        - "admin = \"{{username}}\""
     - pip:
         requirements: /home/{{username}}/ansible/requirements.txt
         virtualenv: /home/{{username}}/.ansible_virtualenv
@@ -128,7 +131,7 @@
       tags:
         - slow
     - file:
-        src: /home/{{username}}/magrathea/workstation/inventory.py
+        src: /home/{{username}}/.magrathea/workstation/inventory.py
         dest: /home/{{username}}/class/inventory.py
         state: link
     - lineinfile:
@@ -140,9 +143,31 @@
         - alias em=emacs
         - . .ansible_virtualenv/bin/activate
         - . ansible/hacking/env-setup
-        - export MAGRATHEA_STATE=/home/{{username}}/magrathea/workstation
-
+        - export MAGRATHEA_STATE=/home/{{username}}/.magrathea/workstation
+        - export ANSIBLE_USER={{username}}
+        - export ANSIBLE_SSH_PRIVATE_KEY_FILE=/home/{{username}}/.ssh/id_rsa
+    - file:
+        src: /home/{{username}}/.ssh/id_rsa
+        dest: /home/{{username}}/.magrathea/workstation/keys/magrathea
+        state: link
+    - file:
+        src: /home/{{username}}/.ssh/id_rsa.pub
+        dest: /home/{{username}}/.magrathea/workstation/keys/magrathea.pub
+        state: link
+    - copy:
+        src: keys/magrathea.json
+        dest: /home/{{username}}/.magrathea/workstation/keys/
+    - file:
+        src: /home/{{username}}/.magrathea/workstation/recreate_alpha.sh
+        dest: /home/{{username}}/recreate_alpha.sh
+        state: link
+    - command: /home/{{username}}/recreate_alpha.sh
+      creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
         
+      
+        
+
+
 # magrathea:/workstation/playbook_workstation.yml
 # Copyright (c) 2017 Christopher DeMarco
 # Licensed under Apache License v2.0
