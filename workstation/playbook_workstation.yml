@@ -161,7 +161,7 @@
         src: /home/{{username}}/.magrathea/workstation/recreate_alpha.sh
         dest: /home/{{username}}/recreate_alpha.sh
         state: link
-    - command: /home/{{username}}/recreate_alpha.sh
+    - command: /home/{{username}}/recreate_alpha.sh -v
       args:
         creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
         

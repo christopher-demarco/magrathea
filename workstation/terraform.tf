@@ -23,6 +23,12 @@ resource "google_compute_instance" "workstation" {
   metadata { sshKeys = "${var.admin}:${file("${var.admin_key}")}" }
 }
 
+resource "google_compute_firewall" "workstation" {
+  name = "http"
+  network = "default"
+  allow { protocol = "tcp" ports = ["80"] }
+}
+
 data "google_dns_managed_zone" "workstation" {
   name = "foamninja"
 }
