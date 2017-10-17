@@ -1,10 +1,11 @@
 #!/bin/bash
 set -e
 
+VERBOSE=1
 while [[ $# -gt 0 ]]; do
     case $1 in
-	-v|--verbose)
-	    VERBOSE=1
+	-q|--quiet)
+	    VERBOSE=0
 	    shift
 	    ;;
     esac

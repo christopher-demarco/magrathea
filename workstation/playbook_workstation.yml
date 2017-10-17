@@ -34,6 +34,7 @@
         - tmux
         - tree
         - unzip
+        - yaml-mode
         - vim
         - virtualenv
       tags:
@@ -83,8 +84,10 @@
     - copy:
         src: "{{item}}"
         dest: "/home/{{username}}/"
+        owner: "{{username}}"
       with_items:
         - .gitconfig
+        - .emacs
   handlers:
     - name: Restart ssh
       service:
@@ -161,10 +164,12 @@
         src: /home/{{username}}/.magrathea/workstation/recreate_alpha.sh
         dest: /home/{{username}}/recreate_alpha.sh
         state: link
-    - command: /home/{{username}}/recreate_alpha.sh -v
+    - command: /home/{{username}}/recreate_alpha.sh
       args:
         creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
-        
+
+
+
       
         
 
