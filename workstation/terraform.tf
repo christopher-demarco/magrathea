@@ -5,7 +5,6 @@ variable "subdomain" { default = "" }
 variable "region" { default = "us-east4" }
 
 provider "google" {
-  version = "0.1.3"
   credentials = "${file("keys/magrathea.json")}"
   project = "magrathea-178523"
   region = "${var.region}"
@@ -14,9 +13,7 @@ provider "google" {
 resource "google_compute_instance" "workstation" {
   count = "${length(var.names)}"
   name = "${var.names[count.index]}"
-  #machine_type = "f1-micro"
   machine_type = "n1-standard-1"
-  #machine_type = "n1-highcpu-2"
   zone = "${var.region}-a"
   boot_disk { initialize_params { image = "ubuntu-1704" } }
   network_interface { network = "default" access_config { } }
