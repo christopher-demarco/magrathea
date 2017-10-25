@@ -26,7 +26,7 @@ data "google_dns_managed_zone" "workstation" {
 
 resource "google_dns_record_set" "workstation" {
   count = "${length(var.names)}"
-  name = "${element(google_compute_instance.workstation.*.name, count.index)}.${var.subdomain}${data.google_dns_managed_zone.workstation.dns_name}"
+  name = "${var.names[count.index]}.${var.subdomain}${data.google_dns_managed_zone.workstation.dns_name}"
   type = "A"
   ttl = 60
   managed_zone = "${data.google_dns_managed_zone.workstation.name}"
