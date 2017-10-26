@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""This is the quickest of quick-and-dirty hacks. It does *not*
+conform to the Ansible requirements for dynamic inventory! In
+particular, the `--list` and `--host=` forms are not supported. But it
+works, mostly.
+"""
+
 import json
 import os
 
