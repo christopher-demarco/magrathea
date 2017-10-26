@@ -32,7 +32,9 @@
         - python-pip
         - tig
         - tmux
+        - tmuxinator
         - tree
+        - screen
         - unzip
         - yaml-mode
         - vim
@@ -133,6 +135,8 @@
         state: latest
       tags:
         - slow
+    - pip:
+        name: docker-py
     - file:
         src: /home/{{username}}/.magrathea/workstation/inventory.py
         dest: /home/{{username}}/class/inventory.py
@@ -164,6 +168,12 @@
         src: /home/{{username}}/.magrathea/workstation/recreate_alpha.sh
         dest: /home/{{username}}/recreate_alpha.sh
         state: link
+    - docker_image:
+        name: "{{ item }}"
+      with_items:
+        - "python:2-alpine"
+        - "python:2.7-jessie"
+        - "ubuntu:zesty"
     - command: /home/{{username}}/recreate_alpha.sh
       args:
         creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
