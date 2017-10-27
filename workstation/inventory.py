@@ -10,7 +10,7 @@ import json
 import os
 
 tfstate_dir = os.environ.get('MAGRATHEA_STATE', '.')
-ansible_user = os.environ.get('ANSIBLE_USER', 'magrathea')
+ansible_user = os.environ.get('ANSIBLE_USER', 'ubuntu')
 ansible_ssh_private_key_file = os.environ.get(
     'ANSIBLE_SSH_PRIVATE_KEY_FILE', 'keys/magrathea')
 tfstate = '{}/terraform.tfstate'.format(tfstate_dir)

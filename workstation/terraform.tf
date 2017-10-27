@@ -29,6 +29,17 @@ resource "aws_instance" "magrathea" {
   key_name = "magrathea"
   vpc_security_group_ids = ["${aws_security_group.magrathea.id}"]
   tags { Name = "${var.names[count.index]}${replace(var.subdomain, ".", "")}" }
+  provisioner "remote-exec" {
+    inline = [
+      "until [ -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
+      "sudo apt-get update",
+      "sudo apt-get install -y python-minimal"
+    ]
+    connection {
+      user = "ubuntu"
+      private_key = "${file(var.ssh_key_path["priv"])}"
+    }
+  }
 }
 
 resource "aws_security_group" "magrathea" {
