@@ -24,7 +24,7 @@ resource "aws_instance" "magrathea" {
   ami = "ami-7f15271f"
   instance_type = "t2.small"
   associate_public_ip_address = true
-  key_name = "magrathea"
+  key_name = "magrathea${replace(var.subdomain, ".", "")}"
   vpc_security_group_ids = ["${aws_security_group.magrathea.id}"]
   tags { Name = "${var.names[count.index]}${replace(var.subdomain, ".", "")}" }
   provisioner "remote-exec" {
