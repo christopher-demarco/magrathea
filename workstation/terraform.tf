@@ -20,7 +20,7 @@ resource "aws_key_pair" "magrathea" {
 }
 
 resource "aws_instance" "magrathea" {
-  count = 1 #"${length(var.names)}"
+  count = "${length(var.names)}"
   ami = "ami-7f15271f"
   instance_type = "t2.small"
   associate_public_ip_address = true
@@ -57,9 +57,9 @@ resource "aws_security_group" "magrathea" {
 }
 
 resource "aws_route53_record" "magrathea" {
-  count = 1 #"${length(var.names)}"
+  count = "${length(var.names)}"
   zone_id = "Z2I8Y3PRV9V1P8"
-  name = "${var.names[count.index]}${replace(var.subdomain, ".", "")}.foam.ninja"
+  name = "${var.names[count.index]}.${var.subdomain}foam.ninja"
   type = "A"
   ttl = "60"
   records = ["${element(aws_instance.magrathea.*.public_ip, count.index)}"]

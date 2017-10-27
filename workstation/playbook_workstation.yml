@@ -170,18 +170,18 @@
         src: /home/{{username}}/.magrathea/workstation/recreate_alpha.sh
         dest: /home/{{username}}/recreate_alpha.sh
         state: link
-    # - command: docker pull {{ item }}
-    #   with_items:
-    #     - "python:2-alpine"
-    #     - "python:2.7-jessie"
-    #     - "ubuntu:zesty"
-    #   tags:
-    #     - slow
-    # - command: /home/{{username}}/recreate_alpha.sh
-    #   args:
-    #     creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
-    #   tags:
-    #     - slow
+    - command: docker pull {{ item }}
+      with_items:
+        - "python:2-alpine"
+        - "python:2.7-jessie"
+        - "ubuntu:zesty"
+      tags:
+        - slow
+    - command: /home/{{username}}/recreate_alpha.sh
+      args:
+        creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
+      tags:
+        - slow
 
 
 
