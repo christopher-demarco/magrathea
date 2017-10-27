@@ -9,6 +9,8 @@
         username: "{{my_hostname.split('-')[0]}}"
     - set_fact:
         password: "{{my_hostname.split('-')[1]}}"
+    - hostname:
+        name: "{{my_hostname}}"
     - timezone:
         name: "US/Pacific"
         hwclock: "UTC"
@@ -182,11 +184,6 @@
         creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
       tags:
         - slow
-
-
-
-      
-        
 
 
 # magrathea:/workstation/playbook_workstation.yml
