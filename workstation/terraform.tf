@@ -1,5 +1,3 @@
-variable "admin" { default = "magrathea" }
-variable "admin_key" { default = "keys/magrathea.pub" }
 variable "names" { default = ["alpha"] }
 variable "subdomain" { default = "" }
 variable "region" { default = "us-west-1" }
@@ -17,7 +15,7 @@ provider "aws" {
 }
   
 resource "aws_key_pair" "magrathea" {
-  key_name = "magrathea"
+  key_name = "magrathea${replace(var.subdomain, ".", "")}"
   public_key = "${file(var.ssh_key_path["pub"])}"
 }
 
@@ -55,7 +53,7 @@ resource "aws_security_group" "magrathea" {
     from_port = 0 to_port = 0 protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags { Name = "magrathea" }
+  tags { Name = "magrathea${replace(var.subdomain, ".", "")}" }
 }
 
 resource "aws_route53_record" "magrathea" {
@@ -68,8 +66,8 @@ resource "aws_route53_record" "magrathea" {
 }
 
 
-output "workstations" { value = "${aws_instance.magrathea.*.public_ip}" } 
-output "hostnames" { value = "${aws_route53_record.magrathea.*.name}" }
+output "hostnames" { value = "${aws_instance.magrathea.*.public_ip}" } 
+output "workstations" { value = "${aws_route53_record.magrathea.*.name}" }
 
 
 # magrathea:workstation/terraform.tf

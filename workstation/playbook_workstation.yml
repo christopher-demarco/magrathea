@@ -4,9 +4,11 @@
   become: yes
   tasks:
     - set_fact:
-        username: "{{ansible_hostname.split('-')[0]}}"
-      tags:
-        - fast
+        my_hostname: "{{ansible_host.split('.')[0]}}"
+    - set_fact:
+        username: "{{my_hostname.split('-')[0]}}"
+    - set_fact:
+        password: "{{my_hostname.split('-')[1]}}"
     - timezone:
         name: "US/Pacific"
         hwclock: "UTC"
@@ -75,7 +77,7 @@
         append: yes
         generate_ssh_key: yes
         groups: docker, sudo
-        password: "{{ansible_hostname.split('-')[1] | password_hash('sha512')}}"
+        password: "{{password | password_hash('sha512')}}"
         shell: /bin/bash
         update_password: on_create
       register:
@@ -111,32 +113,32 @@
         dest: /home/{{username}}/class
       tags:
         - git
+        - slow
     - git:
         repo: https://github.com/christopher-demarco/magrathea.git
         dest: /home/{{username}}/.magrathea
       tags:
-        - git        
+        - git
+        - slow
     - git:
         repo: https://github.com/ansible/ansible.git
         dest: /home/{{username}}/ansible
       tags:
-        - git        
+        - git
+        - slow
     - lineinfile:
         path: /home/{{username}}/.magrathea/workstation/terraform.tfvars
         line: "{{item}}"
         create: yes
         state: present
       with_items:
-        - "subdomain = \"{{ansible_hostname}}.\""
-        - "admin = \"{{username}}\""
+        - "subdomain = \"{{my_hostname}}.\""
     - pip:
         requirements: /home/{{username}}/ansible/requirements.txt
         virtualenv: /home/{{username}}/.ansible_virtualenv
         state: latest
       tags:
         - slow
-    - pip:
-        name: docker-py
     - file:
         src: /home/{{username}}/.magrathea/workstation/inventory.py
         dest: /home/{{username}}/class/inventory.py
@@ -151,7 +153,7 @@
         - . .ansible_virtualenv/bin/activate
         - . ansible/hacking/env-setup
         - export MAGRATHEA_STATE=/home/{{username}}/.magrathea/workstation
-        - export ANSIBLE_USER={{username}}
+        - export ANSIBLE_USER=ubuntu
         - export ANSIBLE_SSH_PRIVATE_KEY_FILE=/home/{{username}}/.ssh/id_rsa
     - file:
         src: /home/{{username}}/.ssh/id_rsa
@@ -162,21 +164,24 @@
         dest: /home/{{username}}/.magrathea/workstation/keys/magrathea.pub
         state: link
     - copy:
-        src: keys/magrathea.json
-        dest: /home/{{username}}/.magrathea/workstation/keys/
+        src: keys/.aws/
+        dest: /home/{{username}}/.aws
     - file:
         src: /home/{{username}}/.magrathea/workstation/recreate_alpha.sh
         dest: /home/{{username}}/recreate_alpha.sh
         state: link
-    - docker_image:
-        name: "{{ item }}"
-      with_items:
-        - "python:2-alpine"
-        - "python:2.7-jessie"
-        - "ubuntu:zesty"
-    - command: /home/{{username}}/recreate_alpha.sh
-      args:
-        creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
+    # - command: docker pull {{ item }}
+    #   with_items:
+    #     - "python:2-alpine"
+    #     - "python:2.7-jessie"
+    #     - "ubuntu:zesty"
+    #   tags:
+    #     - slow
+    # - command: /home/{{username}}/recreate_alpha.sh
+    #   args:
+    #     creates: /home/{{username}}/.magrathea/workstation/terraform.tfstate
+    #   tags:
+    #     - slow
 
 
 
