@@ -7,6 +7,12 @@
         my_hostname: "{{ansible_host.split('.')[0]}}"
     - set_fact:
         username: "{{my_hostname.split('-')[0]}}"
+
+- name: Destroy alpha
+  hosts: all
+  become: yes
+  become_user: "{{username}}"
+  tasks:
     - command: terraform destroy -force
       args:
         chdir: /home/{{username}}/.magrathea/workstation
