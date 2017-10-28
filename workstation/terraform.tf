@@ -11,7 +11,6 @@ variable "ssh_key_path" {
 
 provider "aws" {
   region = "${var.region}"
-  profile = "magrathea"
 }
   
 resource "aws_key_pair" "magrathea" {

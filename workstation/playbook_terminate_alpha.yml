@@ -1,0 +1,17 @@
+---
+- name: Setup
+  hosts: all
+  become: yes
+  tasks:
+    - set_fact:
+        my_hostname: "{{ansible_host.split('.')[0]}}"
+    - set_fact:
+        username: "{{my_hostname.split('-')[0]}}"
+    - command: terraform destroy -force
+      args:
+        chdir: /home/{{username}}/.magrathea/workstation
+
+
+# magrathea:/workstation/playbook_terminate_alpha_workstation.yml
+# Copyright (c) 2017 Christopher DeMarco
+# Licensed under Apache License v2.0

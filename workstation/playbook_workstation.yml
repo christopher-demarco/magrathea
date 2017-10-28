@@ -2,6 +2,7 @@
 - name: Setup
   hosts: all
   become: yes
+  strategy: free
   tasks:
     - set_fact:
         my_hostname: "{{ansible_host.split('.')[0]}}"
@@ -108,6 +109,7 @@
 - name: Install course materials
   hosts: all
   become: yes
+  strategy: free
   become_user: "{{username}}"
   tasks:
     - git:
