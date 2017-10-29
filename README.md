@@ -16,10 +16,9 @@ create/destroy a second instance which she can provision via Ansible.
 - [Ansible](http://ansible.com)
 - [Python 3](docs.python-guide.org)
 
-You will also need a Google Cloud account, properly set up with a
-project and service account credentials, and a DNS domain set up in
-Google Cloud. FIXME Replace all occurrences of my domain `foam.ninja`
-with your own.
+You will also need an AWS account, properly set up with a project and
+service account credentials, and a DNS domain set up in Route53.
+*Replace all occurrences of my domain `foam.ninja` with your own.*
 
 
 # Creating a workstation
